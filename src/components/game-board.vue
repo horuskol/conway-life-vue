@@ -18,6 +18,7 @@
 
         <button type="button" @click.prevent="start">Start</button>
         <button type="button" @click.prevent="stop">Stop</button>
+        <button type="button" @click.prevent="initialiseMap">Clear</button>
       </form>
 
     <div v-for="x in (width * 1)" style="display: inline-block">
