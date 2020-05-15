@@ -15,6 +15,9 @@
           cellSize
         </label>
         <input id="cellSize" type="text" v-model="cellSize"/>
+
+        <button type="button" @click.prevent="start">Start</button>
+        <button type="button" @click.prevent="stop">Stop</button>
       </form>
 
     <div v-for="x in (width * 1)" style="display: inline-block">
@@ -43,7 +46,10 @@
                 width: 0,
                 cellSize: '40px',
 
-                map: []
+                map: [],
+
+                timer: null,
+                interval: 100
             }
         },
 
@@ -58,25 +64,73 @@
                         Vue.set(this.map[x], y, DEAD);
                         break;
                 }
-
-                console.log(x, y, this.map[x][y]);
             },
 
             initialiseMap() {
+                this.stop();
+
                 for (let x = 1; x <= this.width; x++) {
                     Vue.set(this.map, x, []);
                     for (let y = 1; y <= this.width; y++) {
                         Vue.set(this.map[x], y, DEAD);
                     }
                 }
+            },
+
+            start() {
+                if (!this.timer) {
+                    this.timer = setInterval(() => {
+                        let neighbours = [];
+
+                        for (let x = 1; x <= this.width; x++) {
+                            neighbours[x] = [];
+                            for (let y = 1; y <= this.width; y++) {
+                                neighbours[x][y] = (() => {
+                                    let sum = 0;
+                                    for (let dx = -1; dx <= 1; dx++) {
+                                        for (let dy = -1; dy <= 1; dy++) {
+                                            if (this.map[x + dx] && this.map[x + dx][y + dy]) {
+                                                if (this.map[x + dx][y + dy] === ALIVE) {
+                                                    sum++;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    return sum;
+                                })();
+                            }
+                        }
+
+                        for (let x = 1; x <= this.width; x++) {
+                            for (let y = 1; y <= this.width; y++) {
+                                switch (this.map[x][y]) {
+                                    case ALIVE:
+                                        if (neighbours[x][y] < 3 || neighbours[x][y] > 4) {
+                                            Vue.set(this.map[x], y, DEAD);
+                                        }
+                                        break;
+
+                                    case DEAD:
+                                        if (neighbours[x][y] === 3) {
+                                            Vue.set(this.map[x], y, ALIVE);
+                                        }
+                                }
+                            }
+                        }
+                    }, this.interval);
+                }
+            },
+
+            stop() {
+                clearInterval(this.timer);
+                this.timer = null;
             }
         },
 
         watch: {
             height() {
                 this.initialiseMap();
-
-                console.log(this.map);
             },
 
             width() {
