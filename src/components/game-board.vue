@@ -16,6 +16,11 @@
         </label>
         <input id="cellSize" type="text" v-model="cellSize"/>
 
+        <label for="interval">
+          interval
+        </label>
+        <input id="interval" type="text" v-model="interval"/>
+
         <button type="button" @click.prevent="start">Start</button>
         <button type="button" @click.prevent="stop">Stop</button>
         <button type="button" @click.prevent="initialiseMap">Clear</button>
@@ -136,6 +141,11 @@
 
             width() {
                 this.initialiseMap();
+            },
+
+            interval() {
+                this.stop();
+                this.start();
             }
         },
 
