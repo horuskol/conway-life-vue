@@ -62,6 +62,7 @@ export default {
             let context = this.$refs.canvas.getContext('2d');
 
             context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.strokeStyle = '#cccccc';
 
             for (let x = 0; x < this.width; x++) {
                 for (let y = 0; y < this.height; y++) {
@@ -88,6 +89,7 @@ export default {
                     break;
             }
 
+            // fill the grid square but leave the grid outline
             context.fillRect(
                 (x * this.cellSize) + 1,
                 (y * this.cellSize) + 1,
@@ -155,16 +157,23 @@ export default {
                         }
                     }
 
+
+                    // Basic Conway rules:
+                    // - Live cell with two or three live neighbours will survive
+                    // - Dead cell with three neighbours will become alive
+                    // - Anything else is dead
                     for (let x = 0; x < this.width; x++) {
                         for (let y = 0; y < this.height; y++) {
                             switch (this.map[x][y]) {
                                 case ALIVE:
+                                    // Live cell with two or three live neighbours will survive
                                     if (neighbours[x][y] < 3 || neighbours[x][y] > 4) {
                                         Vue.set(this.map[x], y, DEAD);
                                     }
                                     break;
 
                                 case DEAD:
+                                    // Dead cell with three neighbours will become alive
                                     if (neighbours[x][y] === 3) {
                                         Vue.set(this.map[x], y, ALIVE);
                                     }
@@ -192,6 +201,7 @@ export default {
     watch: {
         height() {
             Vue.nextTick(() => {
+                // delay redrawing the grid to prevent the canvas resize wiping it away again
                 this.drawGrid();
                 this.initialiseMap();
             });
@@ -199,6 +209,7 @@ export default {
 
         width() {
             Vue.nextTick(() => {
+                // delay redrawing the grid to prevent the canvas resize wiping it away again
                 this.drawGrid();
                 this.initialiseMap();
             });
@@ -206,6 +217,7 @@ export default {
 
         cellSize() {
             Vue.nextTick(() => {
+                // delay redrawing the grid to prevent the canvas resize wiping it away again
                 this.drawGrid();
                 this.initialiseMap();
             });
@@ -225,14 +237,10 @@ export default {
 </script>
 
 <style>
-    form {
-        display: grid;
-        grid-template-columns: 8rem 8rem;
-        grid-gap: 0.5rem;
-    }
-
-    .alive {
-        background-color: black;
-    }
+form {
+    display: grid;
+    grid-template-columns: 8rem 8rem;
+    grid-gap: 0.5rem;
+}
 </style>
 
