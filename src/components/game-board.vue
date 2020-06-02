@@ -100,8 +100,8 @@ export default {
 
         canvasClicked(event) {
             this.toggleCell(
-                Math.floor((event.clientX - event.target.offsetLeft) / this.cellSize),
-                Math.floor((event.clientY - event.target.offsetTop) / this.cellSize),
+                Math.floor((event.pageX - event.target.offsetLeft) / this.cellSize),
+                Math.floor((event.pageY - event.target.offsetTop) / this.cellSize),
             )
         },
 
