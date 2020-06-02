@@ -1,11 +1,11 @@
 const path = require('path');
 
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
-    entry: './src/index.js',
+    entry: {
+        app: './src/index.js'
+    },
     output: {
         path: path.resolve(__dirname) + '/public',
         filename: 'app.js'
@@ -34,12 +34,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new VueLoaderPlugin(),
-        new BrowserSyncPlugin({
-            host: 'localhost',
-            port: 3000,
-            server: './public'
-        })
+        new VueLoaderPlugin()
     ],
     resolve: {
         extensions: ['.js', '.vue'],

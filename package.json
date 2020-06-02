@@ -1,15 +1,16 @@
 {
   "private": true,
   "scripts": {
-    "build": "node_modules/.bin/webpack",
-    "watch": "node_modules/.bin/webpack --watch"
+    "build": "node_modules/.bin/webpack --config webpack.dev.js",
+    "build:prod": "node_modules/.bin/webpack --config webpack.prod.js",
+    "watch": "node_modules/.bin/webpack --watch --config webpack.dev.js"
   },
   "dependencies": {
     "vue": "^2.6.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
     "babel-loader": "^8.1.0",
     "browser-env": "^3.3.0",
     "browser-sync": "^2.26.7",
@@ -19,6 +20,7 @@
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
   }
 }
