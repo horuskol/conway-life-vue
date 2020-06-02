@@ -1,12 +1,52 @@
 <html>
 <head>
-<title>Conway's Life</title>
+  <title>Conway's Life in Vue (by HorusKol)</title>
+  <style type="text/css">
+    body {
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+    }
+
+    h1 {
+      background-color: #bee3f8;
+      padding: 0.5rem;
+    }
+
+    main {
+      border: 1px solid #bee3f8;
+      border-width: 1px 0;
+      padding: 1rem;
+      margin: 3rem 0;
+      min-height: 50%;
+    }
+
+    footer {
+      background-color: #edf2f7;
+      text-align: right;
+      padding: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-<div id="app">
-  <game-board></game-board>
-</div>
+  <header>
+    <h1>Conway's Life in Vue by HorusKol</h1>
+  </header>
 
-<script type="text/javascript" src="/app.js"></script>
+  <main id="app">
+    <game-board></game-board>
+  </main>
+
+  <footer>
+    <p>
+      <a href="https://github.com/horuskol/conway-life-vue">GitHub</a> |
+      <a href="https://apps.horuskol.net">Apps</a> |
+      <a href="https://horuskol.net">Blog</a>
+    </p>
+
+    <p>
+      &copy; Stuart Jones
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="app.js"></script>
 </body>
 </html>
