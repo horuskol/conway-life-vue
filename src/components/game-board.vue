@@ -1,34 +1,33 @@
 <template>
-    <div class="h-full w-full flex flex-row">
-        <form class="w-auto p-4">
+    <div class="flex flex-row h-full w-auto">
+        <form style="width: 14rem" class="sticky left-0 p-4 bg-white">
             <label for="height">
                 Number of rows
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="height" type="text" v-model="height"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal text-right" id="height" type="text" v-model="height"/>
 
             <label for="width">
                 Number of columns
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="width" type="text" v-model="width"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal text-right" id="width" type="text" v-model="width"/>
 
             <label for="cellSize">
                 Size of cells (in pixels)
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="cellSize" type="text" v-model="cellSize"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal text-right" id="cellSize" type="text" v-model="cellSize"/>
 
             <label for="interval">
                 Time interval between generations
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="interval" type="text" v-model="interval"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal text-right" id="interval" type="text" v-model="interval"/>
 
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === STOPPED" type="button" @click.prevent="start">Start</button>
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === RUNNING" type="button" @click.prevent="stop">Stop</button>
 
-
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" type="button" @click.prevent="clear">Clear</button>
         </form>
 
-        <div class="h-full max-h-full w-full max-w-full overflow-scroll p-4">
+        <div ref="canvas-container" :style="{width: width * cellSize}" class="m-4">
             <canvas ref="canvas" :width="width * cellSize" :height="height * cellSize" @click="canvasClicked"></canvas>
         </div>
     </div>
