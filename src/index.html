@@ -1,48 +1,23 @@
 <html>
-<head>
-  <title>Conway's Life in Vue (by HorusKol)</title>
-  <style type="text/css">
-    body {
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
-    }
+<head class="font-default h-full">
+  <title>Conway's Life in Vue / HorusKol</title>
 
-    h1 {
-      background-color: #bee3f8;
-      padding: 0.5rem;
-    }
-
-    main {
-      border: 1px solid #bee3f8;
-      border-width: 1px 0;
-      padding: 1rem;
-      margin: 3rem 0;
-      min-height: 50%;
-    }
-
-    footer {
-      background-color: #edf2f7;
-      text-align: right;
-      padding: 0.5rem;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-  <header>
-    <h1>Conway's Life in Vue by HorusKol</h1>
+<body class="grid grid-rows-layout h-full text-base">
+  <header class="border-blue-200 pb-2 mb-2">
+      <h1 class="bg-blue-200 p-1 text-3xl p-4 mb-2">Conway's Life</h1>
   </header>
 
   <main id="app">
     <game-board></game-board>
   </main>
 
-  <footer>
+  <footer class="p-4 text-right bg-gray-200">
     <p>
-      <a href="https://github.com/horuskol/conway-life-vue">GitHub</a> |
-      <a href="https://apps.horuskol.net">Apps</a> |
-      <a href="https://horuskol.net">Blog</a>
-    </p>
-
-    <p>
+      <a class="text-blue-700 visited:text-purple-700 hover:text-indigo-500 underline" href="https://github.com/horuskol/conway-life-vue">Source code</a> |
+      <a class="text-blue-700 visited:text-purple-700 hover:text-indigo-500 underline" href="https://apps.horuskol.net">More apps by HorusKol</a> |
+      <a class="text-blue-700 visited:text-purple-700 hover:text-indigo-500 underline" href="https://horuskol.net">Blog</a> |
       &copy; Stuart Jones
     </p>
   </footer>

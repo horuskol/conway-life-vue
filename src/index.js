@@ -1,3 +1,5 @@
+import './app.css';
+
 import Vue from 'vue';
 
 import GameBoard from './components/game-board';
