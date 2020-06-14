@@ -1,34 +1,36 @@
 <template>
-    <div>
-        <form>
+    <div class="h-full w-full flex flex-row">
+        <form class="w-auto p-4">
             <label for="height">
-                height
+                Number of rows
             </label>
-            <input id="height" type="text" v-model="height"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="height" type="text" v-model="height"/>
 
             <label for="width">
-                width
+                Number of columns
             </label>
-            <input id="width" type="text" v-model="width"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="width" type="text" v-model="width"/>
 
             <label for="cellSize">
-                cellSize
+                Size of cells (in pixels)
             </label>
-            <input id="cellSize" type="text" v-model="cellSize"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="cellSize" type="text" v-model="cellSize"/>
 
             <label for="interval">
-                interval
+                Time interval between generations
             </label>
-            <input id="interval" type="text" v-model="interval"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mb-6 block w-full appearance-none leading-normal" id="interval" type="text" v-model="interval"/>
 
-            <button type="button" @click.prevent="start">Start</button>
-            <button type="button" @click.prevent="stop">Stop</button>
-            <button type="button" @click.prevent="clear">Clear</button>
+            <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === STOPPED" type="button" @click.prevent="start">Start</button>
+            <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === RUNNING" type="button" @click.prevent="stop">Stop</button>
+
+
+            <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" type="button" @click.prevent="clear">Clear</button>
         </form>
 
-        <p>{{ state }}</p>
-
-        <canvas ref="canvas" :width="width * cellSize" :height="height * cellSize" @click="canvasClicked"></canvas>
+        <div class="h-full max-h-full w-full max-w-full overflow-scroll p-4">
+            <canvas ref="canvas" :width="width * cellSize" :height="height * cellSize" @click="canvasClicked"></canvas>
+        </div>
     </div>
 </template>
 
@@ -53,7 +55,10 @@ export default {
             timer: null,
             interval: 100,
 
-            state: STOPPED
+            state: STOPPED,
+
+            STOPPED,
+            RUNNING
         }
     },
 
@@ -235,12 +240,4 @@ export default {
     }
 };
 </script>
-
-<style>
-form {
-    display: grid;
-    grid-template-columns: 8rem 8rem;
-    grid-gap: 0.5rem;
-}
-</style>
 
