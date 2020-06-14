@@ -4,22 +4,22 @@
             <label for="height" class="font-semibold">
                 Number of rows
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="height" type="number" v-model="height"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="height" type="number" min="10" v-model="height"/>
 
             <label for="width" class="font-semibold">
                 Number of columns
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="width" type="number" v-model="width"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="width" type="number" min="10" v-model="width"/>
 
             <label for="cellSize" class="font-semibold">
                 Size of cells (px)
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="cellSize" type="number" v-model="cellSize"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="cellSize" type="number" min="10" v-model="cellSize"/>
 
             <label for="interval" class="font-semibold">
                 Time interval between generations (ms)
             </label>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="interval" type="number" step="25" v-model="interval"/>
+            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="interval" type="number" step="25" min="100" v-model="interval"/>
 
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === STOPPED" type="button" @click.prevent="start">Start</button>
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === RUNNING" type="button" @click.prevent="stop">Stop</button>
