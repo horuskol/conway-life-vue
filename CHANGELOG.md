@@ -3,6 +3,7 @@
 * Can click and drag on the game board to draw lines and shapes
 * Game pauses when drawing and resumes if previously running
 * Cells can be resized while running
+* Can resize game board while running
 
 # 2020-06-14: Styling and UI
 

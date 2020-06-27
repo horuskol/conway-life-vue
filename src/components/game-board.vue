@@ -143,12 +143,19 @@ export default {
         },
 
         initialiseMap() {
-            this.stop();
+            const oldMap = this.map;
+            this.map = [];
 
             for (let x = 0; x < this.width; x++) {
                 Vue.set(this.map, x, []);
+
                 for (let y = 0; y < this.height; y++) {
-                    Vue.set(this.map[x], y, DEAD);
+                    if (typeof oldMap[x] === 'undefined' || typeof oldMap[x][y] === 'undefined') {
+                        Vue.set(this.map[x], y, DEAD);
+                    } else {
+                        Vue.set(this.map[x], y, oldMap[x][y]);
+                    }
+                    this.drawCell(x, y, this.map[x][y]);
                 }
             }
         },
@@ -231,37 +238,44 @@ export default {
 
         clear() {
             this.drawGrid();
+            this.map = [];
             this.initialiseMap();
         }
     },
 
     watch: {
         height() {
+            this.pause();
             Vue.nextTick(() => {
                 // delay redrawing the grid to prevent the canvas resize wiping it away again
                 this.drawGrid();
                 this.initialiseMap();
+                this.resume();
             });
         },
 
         width() {
+            this.pause();
             Vue.nextTick(() => {
                 // delay redrawing the grid to prevent the canvas resize wiping it away again
                 this.drawGrid();
                 this.initialiseMap();
+                this.resume();
             });
         },
 
         cellSize() {
+            this.pause();
             Vue.nextTick(() => {
                 // delay redrawing the grid to prevent the canvas resize wiping it away again
                 this.drawGrid();
+                this.resume();
             });
         },
 
         interval() {
-            this.stop();
-            this.start();
+            this.pause();
+            this.resume();
         }
     },
 
