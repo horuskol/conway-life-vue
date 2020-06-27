@@ -21,14 +21,14 @@
             </label>
             <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 mt-2 mb-8 block w-full appearance-none leading-normal text-right" id="interval" type="number" step="25" min="100" v-model="interval"/>
 
-            <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === STOPPED" type="button" @click.prevent="start">Start</button>
+            <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state !== RUNNING" type="button" @click.prevent="start">Start</button>
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === RUNNING" type="button" @click.prevent="stop">Stop</button>
 
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" type="button" @click.prevent="clear">Clear</button>
         </form>
 
         <div ref="canvas-container" :style="{width: width * cellSize}" class="m-4">
-            <canvas ref="canvas" :width="width * cellSize" :height="height * cellSize" @click="canvasClicked"></canvas>
+            <canvas ref="canvas" :width="width * cellSize" :height="height * cellSize" @mousedown="startSelectingCells" @mouseup="endSelectingCells" @mousemove="setCell"></canvas>
         </div>
     </div>
 </template>
@@ -41,6 +41,7 @@ const DEAD = 'dead';
 
 const RUNNING = 'running';
 const STOPPED = 'stopped';
+const PAUSED = 'paused';
 
 export default {
     data() {
@@ -57,7 +58,9 @@ export default {
             state: STOPPED,
 
             STOPPED,
-            RUNNING
+            RUNNING,
+
+            cellAction: null
         }
     },
 
@@ -102,25 +105,41 @@ export default {
             );
         },
 
-        canvasClicked(event) {
-            this.toggleCell(
-                Math.floor((event.pageX - event.target.offsetLeft) / this.cellSize),
-                Math.floor((event.pageY - event.target.offsetTop) / this.cellSize),
-            )
-        },
+        startSelectingCells(event) {
+            this.pause();
 
-        toggleCell(x, y) {
+            const x = Math.floor((event.pageX - event.target.offsetLeft) / this.cellSize);
+            const y = Math.floor((event.pageY - event.target.offsetTop) / this.cellSize);
+
             switch (this.map[x][y]) {
                 case DEAD:
-                    Vue.set(this.map[x], y, ALIVE);
+                    this.map[x][y] = ALIVE;
+                    this.cellAction = ALIVE;
                     break;
 
                 case ALIVE:
-                    Vue.set(this.map[x], y, DEAD);
+                    this.map[x][y] = DEAD;
+                    this.cellAction = DEAD;
                     break;
             }
 
             this.drawCell(x, y, this.map[x][y]);
+        },
+
+        setCell(event) {
+            if (this.cellAction) {
+                const x = Math.floor((event.pageX - event.target.offsetLeft) / this.cellSize);
+                const y = Math.floor((event.pageY - event.target.offsetTop) / this.cellSize);
+
+                this.map[x][y] = this.cellAction;
+                this.drawCell(x, y, this.map[x][y]);
+            }
+        },
+
+        endSelectingCells(event) {
+            this.cellAction = null;
+
+            this.resume();
         },
 
         initialiseMap() {
@@ -196,6 +215,20 @@ export default {
             this.timer = null;
         },
 
+        pause() {
+            if (this.state === RUNNING) {
+                this.state = PAUSED;
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+        },
+
+        resume() {
+            if (this.state === PAUSED) {
+                this.start();
+            }
+        },
+
         clear() {
             this.drawGrid();
             this.initialiseMap();
@@ -223,7 +256,6 @@ export default {
             Vue.nextTick(() => {
                 // delay redrawing the grid to prevent the canvas resize wiping it away again
                 this.drawGrid();
-                this.initialiseMap();
             });
         },
 
