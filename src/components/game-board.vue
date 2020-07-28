@@ -25,6 +25,7 @@
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" v-if="state === RUNNING" type="button" @click.prevent="stop">Stop</button>
 
             <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" type="button" @click.prevent="clear">Clear</button>
+            <button class="block w-full my-2 py-2 px-4 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow" type="button" @click.prevent="random">Random</button>
         </form>
 
         <div ref="canvas-container" :style="{width: width * cellSize}" class="m-4">
@@ -46,9 +47,9 @@ const PAUSED = 'paused';
 export default {
     data() {
         return {
-            height: 10,
-            width: 10,
-            cellSize: 40,
+            height: 100,
+            width: 100,
+            cellSize: 10,
 
             map: [],
 
@@ -240,6 +241,27 @@ export default {
             this.drawGrid();
             this.map = [];
             this.initialiseMap();
+        },
+
+        random() {
+            this.stop();
+            this.clear();
+
+            const start = Date.now();
+
+            for (let x = 0; x < this.width; x++) {
+                for (let y = 0; y < this.height; y++) {
+                    Vue.set(this.map[x], y, DEAD);
+
+                    if (Math.floor(Math.random() * 2) === 1) {
+                        Vue.set(this.map[x], y, ALIVE);
+                    }
+
+                    this.drawCell(x, y, this.map[x][y]);
+                }
+            }
+
+            console.log(Date.now() - start);
         }
     },
 
