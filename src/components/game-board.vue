@@ -44,12 +44,36 @@ const RUNNING = 'running';
 const STOPPED = 'stopped';
 const PAUSED = 'paused';
 
+
+// loads the selected url and converts it to a PNG with the specified height and width
+// this is because when we copy the alive/dead images in the grid using the original SVGs, it gets really slow
+// this way, we get the advantage of sizing the SVG to match the cellSize,
+// but with a speed advantage when copying hundreds of them in the map.
+function loadImage(url, height, width) {
+    return new Promise((resolve, reject) => {
+        let image = new Image();
+
+        image.onload = () => {
+            let png = new Image();
+            let cnv = document.createElement('canvas');
+            let ctx = cnv.getContext('2d');
+
+            ctx.drawImage(image, 0, 0, height, width);
+            png.src = cnv.toDataURL();
+            resolve(png);
+        }
+        image.onerror = reject;
+
+        image.src = url;
+    });
+}
+
 export default {
     data() {
         return {
-            height: 100,
-            width: 100,
-            cellSize: 10,
+            height: 40,
+            width: 40,
+            cellSize: 20,
 
             map: [],
 
@@ -61,49 +85,17 @@ export default {
             STOPPED,
             RUNNING,
 
-            cellAction: null
+            cellAction: null,
+
+            images: {}
         }
     },
 
     methods: {
-        drawGrid() {
-            let context = this.$refs.canvas.getContext('2d');
-
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-            context.strokeStyle = '#cccccc';
-
-            for (let x = 0; x < this.width; x++) {
-                for (let y = 0; y < this.height; y++) {
-                    context.strokeRect(
-                        x * this.cellSize,
-                        y * this.cellSize,
-                        this.cellSize,
-                        this.cellSize
-                    );
-                }
-            }
-        },
-
         drawCell(x, y, state) {
             let context = this.$refs.canvas.getContext('2d');
 
-            switch (state) {
-                case DEAD:
-                    context.fillStyle = 'white';
-                    break;
-
-                case ALIVE:
-                    context.fillStyle = 'black';
-                    break;
-            }
-
-            // fill the grid square but leave the grid outline
-            context.fillRect(
-                (x * this.cellSize) + 1,
-                (y * this.cellSize) + 1,
-                this.cellSize - 2,
-                this.cellSize - 2
-            );
+            context.drawImage(this.images[state], (x * this.cellSize), (y * this.cellSize));
         },
 
         startSelectingCells(event) {
@@ -238,7 +230,7 @@ export default {
         },
 
         clear() {
-            this.drawGrid();
+            this.stop();
             this.map = [];
             this.initialiseMap();
         },
@@ -260,8 +252,6 @@ export default {
                     this.drawCell(x, y, this.map[x][y]);
                 }
             }
-
-            console.log(Date.now() - start);
         }
     },
 
@@ -270,7 +260,6 @@ export default {
             this.pause();
             Vue.nextTick(() => {
                 // delay redrawing the grid to prevent the canvas resize wiping it away again
-                this.drawGrid();
                 this.initialiseMap();
                 this.resume();
             });
@@ -280,20 +269,25 @@ export default {
             this.pause();
             Vue.nextTick(() => {
                 // delay redrawing the grid to prevent the canvas resize wiping it away again
-                this.drawGrid();
                 this.initialiseMap();
                 this.resume();
             });
         },
 
-        cellSize() {
-            this.pause();
-            Vue.nextTick(() => {
-                // delay redrawing the grid to prevent the canvas resize wiping it away again
-                this.drawGrid();
-                this.resume();
-            });
-        },
+async cellSize() {
+    this.pause();
+
+    this.images = {
+        'alive': await loadImage("./img/alive.svg", this.cellSize, this.cellSize),
+        'dead': await loadImage("./img/dead.svg", this.cellSize, this.cellSize),
+    }
+
+    Vue.nextTick(() => {
+        // delay redrawing the grid to prevent the canvas resize wiping it away again
+        this.initialiseMap();
+        this.resume();
+    });
+},
 
         interval() {
             this.pause();
@@ -301,8 +295,12 @@ export default {
         }
     },
 
-    mounted() {
-        this.drawGrid();
+    async mounted() {
+        this.images = {
+            'alive': await loadImage("./img/alive.svg", this.cellSize, this.cellSize),
+            'dead': await loadImage("./img/dead.svg", this.cellSize, this.cellSize),
+        }
+
         this.initialiseMap();
     }
 };
