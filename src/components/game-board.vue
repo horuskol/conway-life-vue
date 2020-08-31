@@ -56,6 +56,8 @@ function loadImage(url, height, width) {
         image.onload = () => {
             let png = new Image();
             let cnv = document.createElement('canvas');
+            cnv.height = height;
+            cnv.width = width;
             let ctx = cnv.getContext('2d');
 
             ctx.drawImage(image, 0, 0, height, width);
